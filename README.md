@@ -1,59 +1,156 @@
-# autoreplychatbot
 import pyautogui
 import pyperclip
 import time
-#pyautogui is python library that automates and controls mouse and keypad , pyperclip is like copy and paste , time is builtin python function that delays time 
+import requests  #talks to lm studio server
 
-print("chotu roster starting in 5 seconds......")
+LM_STUDIO_URL = "http://127.0.0.1:1234/v1/chat/completions"
+MODEL_NAME = "mistral-7b-instruct-v0.1"
+# tells python where ai brain lives uses openai api
+
+print("chotu bot 5 second me start ho rha haiiii!.....")
 time.sleep(5)
 
-pyautogui.FAILSAFE = True  #stops if mouse goes to top-left corner needed coz: if automation goes wrong u can stop instantly
+pyautogui.FAILSAFE = False
+pyautogui.PAUSE = 0.5
+
+import time, pyautogui
+print("Wait...")
+time.sleep(5)
+print("Started")
+
+TARGET_USER_CONTEXT = """ 
+Target user name: owais
+Personality: Overconfident, fast replier, thinks he is very smart
+
+Friend group:
+owais, tausif, furqan, tahir, sehbaz, sameer, majid
+College: ZHCET AMU, Aligarh
+
+Living:
+tausif in Annex C
+Ammi in PG
+others in Room-38
+
+Extra qualities:
+- Ammi thinks he can roast anyone and always win
+- Very good in Python
+- Talks with multiple friend groups
+- Sits with tausif on last bench
+
+Bot personality:
+Name: chotu_bot
+Style: very smart, dark roast, savage Hinglish
+...
+"""
+import pyautogui
+import pyperclip
+import time
+import requests
+
+# LM STUDIO related code
+
+LM_STUDIO_URL = "http://127.0.0.1:1234/v1/chat/completions"
+MODEL_NAME = "mistral-7b-instruct-v0.1"
+
+print("chotu bot 5 second me start ho rha haiiii!.....")
+time.sleep(5)
+
+pyautogui.FAILSAFE = True
+pyautogui.PAUSE = 0.3
+
+# CONTEXT (VERY IMPORTANT)
+
+TARGET_USER_CONTEXT = """
+Target user name: owais
+Personality: Overconfident, fast replier, thinks he is very smart
+
+Friend group:
+owais, tausif, furqan, tahir, sehbaz, sameer, majid
+college : ZHCET AMU, Aligarh
+Living:
+tausif in Annex C
+owias in PG
+others in Room-38 Annex C
+
+Extra traits:
+- owais thinks he can roast anyone and always win
+- Talks with multiple friend groups
+- Sits with tausif on last bench
+
+Bot personality:
+Name: chotu_bot
+Style: very smart, dark roast, savage Hinglish
+Rule: NEVER abusive, but mentally dominating
+"""
+
+#COPYING WHatsapp chatt
 
 def copy_chat_history():
-    pyautogui.moveTo(300, 300)
-    pyautogui.dragTo(900, 600, duration=2)
+    pyautogui.click(620,909)          # adjust once if needed
+    time.sleep(0.3)
+    pyautogui.dragTo(1109,664, duration=2)
     pyautogui.hotkey("ctrl", "c")
-    time.sleep(1)
-    return pyperclip.paste()
+    time.sleep(0.5)
+    return pyperclip.paste().strip()
 
-"""moveTo - it moves the mouse to chat area
-   dragTo- select message , hotkey - ctrl+c(it elps to contrl shift and fn. command)"""
+    #checking if msg sent by target user
+def should_reply(chat_text):
+    if not chat_text:
+        return False
 
-def is_last_message_from_user(chat_text, username):
-    lines = chat_text.strip().split("\n")
-    last_line = lines[-1]
-    return last_line.startswith(username)
-"""1. chat_text.strip().split("\n")
-.strip(): Removes any accidental empty spaces or "new line" characters at the very beginning or the very end of the copied text.
+    last_line = chat_text.split("\n")[-1].lower()
+    return "you:" not in last_line
+#generating roast
+def generate_roast(chat_history):
 
-.split("\n"): This is the most important part. It takes the big block of chat history (one long string) and cuts it into a List of strings, using every "New Line" (where you pressed Enter) as the cutting point.
+    system_prompt = f"""
+You are chotu bot acting as a WhatsApp chatbot.
 
-2. last_line = lines[-1]
-In Python, the index [-1] always grabs the very last item in a list.
+Your job:
+- Read WhatsApp chat carefully
+- Understand who sent the LAST message
+- Roast ONLY if the last message is from Owais
+- Use Hinglish (Hindi + English mix)
+- Dark, savage, intelligent roast
+- Never abusive or vulgar
+- Reply must sound like a college student
+- Max 2–3 lines
 
-Because you just split the chat into lines, lines[-1] represents the most recent message sent in the chat.
+User background:
+{TARGET_USER_CONTEXT}
+"""
 
-3. return last_line.startswith(username)
-This checks if the last line begins with the name you are looking for (e.g., "Rohan Das").
+    payload = {
+        "model": MODEL_NAME,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": chat_history}
+        ],
+        "temperature": 0.85,
+        "max_tokens": 120
+    }
 
-If it matches: It returns True (Naruto should roast him!).
+    response = requests.post(LM_STUDIO_URL, json=payload)
 
-If it doesn't: It returns False (Naruto stays silent)."""
+    if response.status_code != 200:
+        return "Server thak gaya"
+
+    return response.json()["choices"][0]["message"]["content"].strip()
+
+
 def send_reply(message):
     pyperclip.copy(message)
-    pyautogui.click(500, 700)
+    pyautogui.click(673,973)
     pyautogui.hotkey("ctrl", "v")
     pyautogui.press("enter")
 
-def generate_fake_roast():
-    return "Oi tausif , even Naruto trains harder than you type!"
+#main kaam idr se
+chat = copy_chat_history()
+print("CHAT HISTORY:\n", chat)
 
-while True:
-    chat = copy_chat_history()
-
-    if is_last_message_from_user(chat, "Rohan"):
-        reply = generate_fake_roast()
-        send_reply(reply)
-        time.sleep(10)
-
-    time.sleep(5)
+if should_reply(chat):
+    reply = generate_roast(chat)
+    print("\nBOT REPLY:\n", reply)
+    send_reply(reply)   # ✅ UNCOMMENT AFTER CONFIRMING OUTPUT
+else:
+    print("No reply needed.")
