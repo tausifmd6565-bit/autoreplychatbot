@@ -15,7 +15,7 @@ pyautogui.PAUSE = 0.5
 
 import time, pyautogui
 print("Wait...")
-time.sleep(5)
+time.sleep(3)
 print("Started")
 
 TARGET_USER_CONTEXT = """ 
@@ -28,12 +28,11 @@ College: ZHCET AMU, Aligarh
 
 Living:
 tausif in Annex C
-Ammi in PG
+owais in PG
 others in Room-38
 
 Extra qualities:
-- Ammi thinks he can roast anyone and always win
-- Very good in Python
+- owais thinks he can roast anyone and always win
 - Talks with multiple friend groups
 - Sits with tausif on last bench
 
@@ -67,11 +66,6 @@ Personality: Overconfident, fast replier, thinks he is very smart
 Friend group:
 owais, tausif, furqan, tahir, sehbaz, sameer, majid
 college : ZHCET AMU, Aligarh
-Living:
-tausif in Annex C
-owias in PG
-others in Room-38 Annex C
-
 Extra traits:
 - owais thinks he can roast anyone and always win
 - Talks with multiple friend groups
