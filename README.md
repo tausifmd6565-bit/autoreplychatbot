@@ -19,20 +19,20 @@ time.sleep(3)
 print("Started")
 
 TARGET_USER_CONTEXT = """ 
-Target user name: owais
+Target user name: farhan
 Personality: Overconfident, fast replier, thinks he is very smart
 
 Friend group:
-owais, tausif, furqan, tahir, sehbaz, sameer, majid
+farhan, tausif, furqan, tahir, sehbaz, raju,jony
 College: ZHCET AMU, Aligarh
 
 Living:
-tausif in Annex C
-owais in PG
+tausif in pg
+farhan in PG
 others in Room-38
 
 Extra qualities:
-- owais thinks he can roast anyone and always win
+- farhan thinks he can roast anyone and always win
 - Talks with multiple friend groups
 - Sits with tausif on last bench
 
@@ -60,14 +60,14 @@ pyautogui.PAUSE = 0.3
 # CONTEXT (VERY IMPORTANT)
 
 TARGET_USER_CONTEXT = """
-Target user name: owais
+Target user name: farhan
 Personality: Overconfident, fast replier, thinks he is very smart
 
 Friend group:
-owais, tausif, furqan, tahir, sehbaz, sameer, majid
+farhan, tausif, furqan, tahir, sehbaz, sameer, majid
 college : ZHCET AMU, Aligarh
 Extra traits:
-- owais thinks he can roast anyone and always win
+- farhan thinks he can roast anyone and always win
 - Talks with multiple friend groups
 - Sits with tausif on last bench
 
